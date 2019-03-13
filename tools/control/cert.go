@@ -11,7 +11,7 @@ import (
 
 	"v2ray.com/core/common"
 	"v2ray.com/core/common/protocol/tls/cert"
-	"v2ray.com/core/common/signal"
+	"v2ray.com/core/common/task"
 )
 
 type stringList []string
@@ -77,7 +77,7 @@ func (c *CertificateCommand) writeFile(content []byte, name string) error {
 
 func (c *CertificateCommand) printFile(certificate *cert.Certificate, name string) error {
 	certPEM, keyPEM := certificate.ToPEM()
-	return signal.ExecuteParallel(context.Background(), func() error {
+	return task.Run(context.Background(), func() error {
 		return c.writeFile(certPEM, name+"_cert.pem")
 	}, func() error {
 		return c.writeFile(keyPEM, name+"_key.pem")
